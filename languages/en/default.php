@@ -18,4 +18,3 @@
  */
 $GLOBALS['TL_LANG']['default']['log_report_modifications'] = "Modifications on";
 $GLOBALS['TL_LANG']['default']['log_report_no_modifications_found'] = "No modifications found!";
-?>

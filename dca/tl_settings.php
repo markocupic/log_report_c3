@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_settings']['palettes']['default'] .= ';{log_report_legend
  */
 $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_activate'] = array
 (
-		'label'		=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_activate'],
+		'label'	=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_activate'],
 		'inputType'	=>	'checkbox',
 		'default'	=>	'true',
 		'eval'		=>	array('tl_class'=>'long clr')
@@ -31,7 +31,7 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_activate'] = array
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_send_email_when_db_changed'] = array
 (
-		'label'		=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_send_email_when_db_changed'],
+		'label'	=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_send_email_when_db_changed'],
 		'inputType'	=>	'checkbox',
 		'default'	=>	'true',
 		'eval'		=>	array('tl_class'=>'long clr')
@@ -39,30 +39,30 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_send_email_when_db_chang
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_template'] = array
 (
-		'label'				=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_template'],
-		'inputType'         => 'select',
-		'options_callback'  => array('log_report_settings', 'getPartialTemplates'),
-		'eval'		=>	array('tl_class'=>'long clr')
+		'label'              => &$GLOBALS['TL_LANG']['tl_settings']['log_report_template'],
+		'inputType'          => 'select',
+		'options_callback'   => array('log_report_settings', 'getPartialTemplates'),
+		'eval'               => array('tl_class'=>'long clr')
 );
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_recipients'] = array
 (
-		'label'		=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_recipients'],
-		'inputType'	=>	'text',
-		'eval'		=>	array('tl_class'=>'long clr')
+		'label'       =>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_recipients'],
+		'inputType'   =>	'text',
+		'eval'        =>	array('tl_class'=>'long clr')
 );
 
 $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_observed_tables'] = array
 (
-		'label'		=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_observed_tables'],
+		'label'       =>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_observed_tables'],
 		'inputType'	=>	'checkbox',
 		'options'	=>	array('tl_content','tl_member','tl_news','tl_user'),
 		'eval'		=>	array('multiple'=>true, 'tl_class'=>'long clr')
 );
 $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_additional_observed_tables'] = array
 (
-		'label'		=>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_additional_observed_tables'],
-		'inputType'	=>	'text',
+		'label'       =>	&$GLOBALS['TL_LANG']['tl_settings']['log_report_additional_observed_tables'],
+		'inputType'   =>	'text',
 		'eval'		=>	array('tl_class'=>'long clr')
 );
 
@@ -89,5 +89,4 @@ class log_report_settings extends \Backend
 		$intPid = $dc->activeRecord->pid;
 		return $this->getTemplateGroup('log_report_partial', $intPid);
 	}
-}	
-?>
+}
