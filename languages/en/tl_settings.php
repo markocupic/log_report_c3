@@ -3,18 +3,17 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * @package log_report
- * @link    http://contao.org
- * @author Marko Cupic m.cupic@gmx.ch
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @package   log_report
+ * @author    Marko Cupic
+ * @license   shareware
+ * @copyright Marko Cupic 2014
  */
 
 /**
  * Legends
  */
-
 $GLOBALS['TL_LANG']['tl_settings']['log_report_legend'] = "Log-Report";
 
 /**

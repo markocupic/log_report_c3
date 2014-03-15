@@ -3,13 +3,21 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * @package log_report
- * @link    http://contao.org
- * @author Marko Cupic m.cupic@gmx.ch
+ * @package Log_report
+ * @link    https://contao.org
  * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
+
+
+/**
+ * Register the namespaces
+ */
+ClassLoader::addNamespaces(array
+(
+	'MCupic',
+));
 
 
 /**
@@ -18,7 +26,7 @@
 ClassLoader::addClasses(array
 (
 	// Modules
-	'Contao\LogReport' => 'system/modules/log_report/modules/LogReport.php',
+	'MCupic\LogReport' => 'system/modules/log_report/modules/LogReport.php',
 ));
 
 
@@ -27,6 +35,6 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'log_report'         => 'system/modules/log_report/templates',
 	'log_report_partial' => 'system/modules/log_report/templates',
+	'log_report'         => 'system/modules/log_report/templates',
 ));

@@ -3,12 +3,12 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * @package log_report
- * @link    http://contao.org
- * @author Marko Cupic m.cupic@gmx.ch
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @package   log_report
+ * @author    Marko Cupic
+ * @license   shareware
+ * @copyright Marko Cupic 2014
  */
 
 /**
@@ -65,6 +65,7 @@ $GLOBALS['TL_DCA']['tl_settings']['fields']['log_report_additional_observed_tabl
 		'inputType'   =>	'text',
 		'eval'		=>	array('tl_class'=>'long clr')
 );
+
 
 class log_report_settings extends \Backend
 {

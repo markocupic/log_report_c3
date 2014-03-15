@@ -3,51 +3,67 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (C) 2005-2012 Leo Feyer
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * @package log_report
- * @link    http://contao.org
- * @author Marko Cupic m.cupic@gmx.ch
- * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
+ * @package   log_report
+ * @author    Marko Cupic
+ * @license   shareware
+ * @copyright Marko Cupic 2014
  */
 
 /**
  * Run in a custom namespace, so the class can be replaced
  */
-namespace Contao;
+namespace MCupic;
 
 class LogReport extends \Frontend
 {
+
        protected $strTemplate = 'log_report';
        protected $strPartialTemplate = 'log_report_partial';
        protected $countReports = 0;
+       protected $token;
+
 
        public function __construct()
        {
+
               parent::__construct();
               //assigning the frontend template
               $this->strPartialTemplate = strlen(trim($GLOBALS['TL_CONFIG']['log_report_template'])) ? $GLOBALS['TL_CONFIG']['log_report_template'] : $this->strPartialTemplate;
+              $this->token = sha1(\Encryption::hash(md5(microtime())) . sha1($GLOBALS['TL_CONFIG']['encryptionKey']));
        }
+
 
        /**
         * the module controller
         */
        public function runLogReport()
        {
+
               if (!$GLOBALS['TL_CONFIG']['log_report_activate'])
+              {
                      return;
+              }
               //nur zu Testzwecken
-              define ('LOG_REPORT_TEST_MODE', false);
+              //define ('LOG_REPORT_TEST_MODE', true);
 
               $arrObservedTables = array_unique(array_merge(unserialize($GLOBALS['TL_CONFIG']['log_report_observed_tables']), explode(',', $GLOBALS['TL_CONFIG']['log_report_additional_observed_tables'])));
               if (!is_array($arrObservedTables))
+              {
                      return;
+              }
 
               //removes empty value with a callback function
-              $this->arrObservedTables = array_filter($arrObservedTables, array("Contao\LogReport", "isNotEmpty"));
+              $this->arrObservedTables = array_filter($arrObservedTables, array(
+                     "MCupic\LogReport",
+                     "isNotEmpty"
+              ));
 
               if (count($this->arrObservedTables) < 1)
+              {
                      return;
+              }
 
               $template = new \FrontendTemplate($this->strTemplate);
               $template->arrObservedTables = $this->arrObservedTables;
@@ -79,9 +95,10 @@ class LogReport extends \Frontend
 
                      //db insert
                      $set = array(
-                            "date" => $this->dateKey,
-                            "recipients" => $GLOBALS['TL_CONFIG']['log_report_recipients'],
-                            "report" => $htmlMailContent
+                            "date"        => $this->dateKey,
+                            "recipients"  => $GLOBALS['TL_CONFIG']['log_report_recipients'],
+                            "report"      => $htmlMailContent,
+                            "token"       => $this->token
                      );
 
                      //store report in tl_log_report and in tl_log
@@ -94,15 +111,19 @@ class LogReport extends \Frontend
                      }
               }
        }
+ 
 
        /**
         * get log entries in tl_log
         */
        private function getNewVersions()
        {
+
               $objLog = $this->Database->prepare("SELECT * FROM tl_log WHERE log_report_date=? ORDER BY tstamp")->execute("");
               if ($objLog->numRows < 1)
+              {
                      return;
+              }
 
               //continue, if there are some unreported changes
               while ($objLog->next())
@@ -117,6 +138,7 @@ class LogReport extends \Frontend
               }
        }
 
+
        /**
         * @param string $str
         * @param string $username
@@ -124,6 +146,7 @@ class LogReport extends \Frontend
         */
        private function createPartialHtml($str, $username, $tstamp)
        {
+
               $this->import('Environment');
 
               foreach ($this->arrObservedTables as $table)
@@ -159,15 +182,15 @@ class LogReport extends \Frontend
                                                         //create the backend-link which links directly to the contao-backend
                                                         if ($table == "tl_content")
                                                         {
-                                                               $backendUrl = $this->Environment->base . sprintf("contao/main.php?do=%s&table=%s&act=edit&id=%s", "article", $table, $treffer["id"]);
+                                                               $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&table=%s&act=edit&id=%s", $this->token, "article", $table, $treffer["id"]);
                                                         }
                                                         elseif ($table == "tl_news")
                                                         {
-                                                               $backendUrl = $this->Environment->base . sprintf("contao/main.php?do=%s&table=%s&act=edit&id=%s", str_replace("tl_", "", $table), $table, $treffer["id"]);
+                                                               $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&table=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $table, $treffer["id"]);
                                                         }
                                                         else
                                                         {
-                                                               $backendUrl = $this->Environment->base . sprintf("contao/main.php?do=%s&act=edit&id=" . $treffer["id"], str_replace("tl_", "", $table));
+                                                               $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $treffer["id"]);
                                                         }
 
                                                         $fields["backendUrl"] = '<a href="' . $backendUrl . '" title="go to contao backend">' . $backendUrl . '</a>';
@@ -175,7 +198,9 @@ class LogReport extends \Frontend
                                                         {
                                                                //for security reasons the password will not be displayed
                                                                if ($arrField["name"] == "password" || $arrField["name"] == "PRIMARY")
+                                                               {
                                                                       continue;
+                                                               }
                                                                $fields[$arrField["name"]] = $objDb->{$arrField["name"]};
                                                         }
                                                  }
@@ -191,14 +216,17 @@ class LogReport extends \Frontend
               }
        }
 
+
        /**
         * purge tl_log_report
         */
        public function purgeLogReportTable()
        {
+
               // This method is called from the maintenance module
               $this->Database->execute("TRUNCATE TABLE tl_log_report");
        }
+
 
        /**
         * @param string $var
@@ -206,22 +234,29 @@ class LogReport extends \Frontend
         */
        public function isNotEmpty($var)
        {
+
               if (strlen($var))
               {
                      return $var;
               }
        }
 
+
        /**
         * @param string $htmlMessage
         */
        private function sendEmail($htmlMessage = "")
        {
+
               $arr_recipients = explode(',', $GLOBALS['TL_CONFIG']['log_report_recipients']);
               if (!is_array($arr_recipients))
+              {
                      return;
+              }
               if (!count($arr_recipients))
+              {
                      return;
+              }
               //create the attachment-file
               $filepath = "system/html/log_report_" . time() . ".html";
               $file = new \File($filepath);
@@ -233,9 +268,17 @@ class LogReport extends \Frontend
                      $email->charset = 'UTF-8';
                      $email->priority = 'high';
                      //placeholder-values values array
-                     $arr_search = array('http://', 'www.', 'https://');
+                     $arr_search = array(
+                            'http://',
+                            'www.',
+                            'https://'
+                     );
                      //replace values array
-                     $arr_replace = array('', '', '');
+                     $arr_replace = array(
+                            '',
+                            '',
+                            ''
+                     );
                      $from = 'log.report@' . str_replace($arr_search, $arr_replace, $_SERVER['HTTP_HOST']);
                      $email->from = $from;
                      $email->replyTo($from);
@@ -244,7 +287,9 @@ class LogReport extends \Frontend
                      $email->html = $htmlMessage;
                      $email->attachFile($filepath);
                      if (strlen(trim($recipient)))
+                     {
                             $email->sendTo(trim($recipient));
+                     }
               }
               //delete the tmp-file
               $file->delete();

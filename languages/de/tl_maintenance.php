@@ -2,11 +2,11 @@
 /**
  * TL_ROOT/system/modules/log_report/languages/de/tl_maintenance.php 
  * 
- * Contao extension: log_report 2.0.0 stable 
+ * Contao extension: log_report 2.1.0 stable 
  * Deutsch translation file 
  * 
  * Copyright : &copy; 2012 Marko Cupic, Oberkirch CH 
- * License   :  
+ * License   : shareware 
  * Author    : Marko Cupic (markocupic) 
  * Translator: Marko Cupic (markocupic) 
  * 

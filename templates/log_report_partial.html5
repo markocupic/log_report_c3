@@ -22,7 +22,7 @@ $row=0;
 
 <table width="100%">
 <tr class="">
-	<td class="col_1">Benutzername:</td>
+	<td class="col_1"><?php echo $GLOBALS['TL_LANG']['default']['log_report_username']; ?>:</td>
 	<td class="col_2"><?php echo $this->username;  ?></td>
 </tr>
 <tr class="odd">
