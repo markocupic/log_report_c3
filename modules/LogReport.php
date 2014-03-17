@@ -46,7 +46,7 @@ class LogReport extends \Frontend
                      return;
               }
               //nur zu Testzwecken
-              //define ('LOG_REPORT_TEST_MODE', true);
+              define ('LOG_REPORT_TEST_MODE', false);
 
               $arrObservedTables = array_unique(array_merge(unserialize($GLOBALS['TL_CONFIG']['log_report_observed_tables']), explode(',', $GLOBALS['TL_CONFIG']['log_report_additional_observed_tables'])));
               if (!is_array($arrObservedTables))
@@ -71,7 +71,7 @@ class LogReport extends \Frontend
               $this->dateKey = date("Y_m_d");
               //if a report was allready sent today, abort here
               $objReport = $this->Database->prepare("SELECT * FROM tl_log_report WHERE date=?")->execute($this->dateKey);
-              if ($objReport->numRows == 0 || LOG_REPORT_TEST_MODE == true)
+              if ($objReport->numRows == 0 || LOG_REPORT_TEST_MODE === true)
               {
                      //search for new Versions in the db
                      $this->getNewVersions();
