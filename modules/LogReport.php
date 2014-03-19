@@ -95,10 +95,10 @@ class LogReport extends \Frontend
 
                      //db insert
                      $set = array(
-                            "date"        => $this->dateKey,
-                            "recipients"  => $GLOBALS['TL_CONFIG']['log_report_recipients'],
-                            "report"      => $htmlMailContent,
-                            "token"       => $this->token
+                            "date" => $this->dateKey,
+                            "recipients" => $GLOBALS['TL_CONFIG']['log_report_recipients'],
+                            "report" => $htmlMailContent,
+                            "token" => $this->token
                      );
 
                      //store report in tl_log_report and in tl_log
@@ -111,7 +111,7 @@ class LogReport extends \Frontend
                      }
               }
        }
- 
+
 
        /**
         * get log entries in tl_log
@@ -267,21 +267,8 @@ class LogReport extends \Frontend
                      $email = new \Email();
                      $email->charset = 'UTF-8';
                      $email->priority = 'high';
-                     //placeholder-values values array
-                     $arr_search = array(
-                            'http://',
-                            'www.',
-                            'https://'
-                     );
-                     //replace values array
-                     $arr_replace = array(
-                            '',
-                            '',
-                            ''
-                     );
-                     $from = 'log.report@' . str_replace($arr_search, $arr_replace, $_SERVER['HTTP_HOST']);
-                     $email->from = $from;
-                     $email->replyTo($from);
+                     $email->from = $GLOBALS['TL_ADMIN_EMAIL'];
+                     $email->fromName = 'Log Report (' . \Environment::get('host') . ')';
                      $email->subject = "change log contao";
                      $email->text = 'A new log report was sent to you! Please open te email with a html-compatible email-programm!';
                      $email->html = $htmlMessage;
