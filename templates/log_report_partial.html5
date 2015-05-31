@@ -1,6 +1,6 @@
 <?php
-// The partial template for tl_content
-// Define an array for each table with all fieldnames you wish to have displayed in the report.
+//the partial template for tl_content
+//define an array for each table with all fieldnames you wish to have displayed in the report.
 $arr_displayedFields["tl_content"] = array("backendUrl", "id", "headline", "text", "html");
 $arr_displayedFields["tl_member"] = array("backendUrl", "id", "firstname", "lastname");
 $arr_displayedFields["tl_news"] = array("backendUrl", "id", "author", "headline", "subheadline", "teaser", "text");
@@ -8,12 +8,12 @@ $arr_displayedFields["tl_user"] = array("backendUrl", "id", "username");
 
 
 
-// Add here some additional tables, which you have declared in the backend-settings
-// $arr_displayedFields["tl_an_other_table"] = array("backendUrl", "id", "username");
-// $arr_displayedFields["tl_an_other_table"] = array("backendUrl", "id", "username");
+//add here some additional tables, which you have declared in the backend-settings
+//$arr_displayedFields["tl_an_other_table"] = array("backendUrl", "id", "username");
+//$arr_displayedFields["tl_an_other_table"] = array("backendUrl", "id", "username");
 
 
-// End settings
+//end settings
 
 $row=0;
 ?>
@@ -37,7 +37,8 @@ $row=0;
 	<td class="col_1">Log-Mitteilung:</td>
 	<td class="col_2"><?php echo $this->logMessage;  ?></td>
 </tr>
-<?php foreach ($arr_displayedFields[$this->table]  as $fieldname): ?>
+<?php if(is_array($arr_displayedFields[$this->table])): ?>
+<?php foreach ($arr_displayedFields[$this->table] as $fieldname): ?>
 	<?php $row++; $content = $this->fields[$fieldname];?>
 	<?php if ($content!=""): ?>
 		<tr class="<?php echo $row%2==0 ? "odd":""; ?>">
@@ -46,5 +47,6 @@ $row=0;
 		</tr>
 	<?php endif; ?>
 <?php endforeach; ?>
+<?php endif; ?>
 </table>
 <br>

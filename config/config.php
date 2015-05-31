@@ -12,18 +12,26 @@
  */
 
 
-$GLOBALS['TL_PURGE']['tables']['log_report']['callback'] = array('LogReport\ModLogReport', 'purgeLogReportTable');
+$GLOBALS['TL_PURGE']['tables']['log_report']['callback'] = array(
+       'MCupic\LogReport',
+       'purgeLogReportTable'
+);
 $GLOBALS['TL_PURGE']['tables']['log_report']['affected'] = array('tl_log_report');
 
-$GLOBALS['TL_HOOKS']['generatePage'][] = array('LogReport\ModLogReport', 'runLogReport');
+$GLOBALS['TL_HOOKS']['generatePage'][] = array(
+       'MCupic\LogReport',
+       'runLogReport'
+);
 
-// Add request token to query string
-if (TL_MODE == 'BE' && strlen(\Input::get('lrtoken'))) {
-    $objLogReport = \Database::getInstance()->prepare('SELECT * FROM tl_log_report WHERE token=?')->execute(\Input::get('lrtoken'));
-    if ($objLogReport->numRows) {
-        $url = str_replace('/contao/', 'contao/', \Environment::get('requestUri'));
-        $url = preg_replace('/lrtoken=(.+?)\&/', '', $url);
-        $url .= '&rt=' . @$_SESSION['REQUEST_TOKEN'];
-        \Controller::redirect($url);
-    }
+// add request token to query string
+if (TL_MODE == 'BE' && strlen(\Input::get('lrtoken')))
+{
+       $objLogReport = \Database::getInstance()->prepare('SELECT * FROM tl_log_report WHERE token=?')->execute(\Input::get('lrtoken'));
+       if ($objLogReport->numRows)
+       {
+              $url = str_replace('/contao/', 'contao/', \Environment::get('requestUri'));
+              $url = preg_replace('/lrtoken=(.+?)\&/', '', $url);
+              $url .= '&rt=' . @$_SESSION['REQUEST_TOKEN'];
+              \Controller::redirect($url);
+       }
 }

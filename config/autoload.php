@@ -3,9 +3,11 @@
 /**
  * Contao Open Source CMS
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2014 Leo Feyer
  *
- * @license LGPL-3.0+
+ * @package Log_report
+ * @link    https://contao.org
+ * @license http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  */
 
 
@@ -23,8 +25,8 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
-	// Src
-	'MCupic\LogReport\ModLogReport' => 'system/modules/log_report/src/modules/ModLogReport.php',
+	// Modules
+	'MCupic\LogReport' => 'system/modules/log_report/modules/LogReport.php',
 ));
 
 
