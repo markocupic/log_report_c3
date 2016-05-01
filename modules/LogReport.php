@@ -193,7 +193,7 @@ class LogReport extends \Frontend
                                                                $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $treffer["id"]);
                                                         }
 
-                                                        $fields["backendUrl"] = '<a href="' . $backendUrl . '" title="go to contao backend">' . $backendUrl . '</a>';
+                                                        $fields["backendUrl"] = '<a href="' . $backendUrl . '" title="go to contao backend">' . $GLOBALS['TL_LANG']['default']['linkToContaoBackendModule'] . '</a>';
                                                         foreach ($arrFields as $arrField)
                                                         {
                                                                //for security reasons the password will not be displayed

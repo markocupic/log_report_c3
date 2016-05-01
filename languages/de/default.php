@@ -18,5 +18,5 @@
 $GLOBALS['TL_LANG']['default']['log_report_modifications'] = "Änderungen an";
 $GLOBALS['TL_LANG']['default']['log_report_no_modifications_found'] = "Keine Änderungen gefunden!";
 $GLOBALS['TL_LANG']['default']['log_report_username'] = "Benutzername";
- 
+$GLOBALS['TL_LANG']['default']['linkToContaoBackendModule'] = "Link ins Contao Backend";
 ?>
