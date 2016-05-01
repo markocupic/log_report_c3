@@ -22,28 +22,29 @@ $row=0;
 
 <table width="100%">
 <tr class="">
-	<td class="col_1"><?php echo $GLOBALS['TL_LANG']['default']['log_report_username']; ?>:</td>
-	<td class="col_2"><?php echo $this->username;  ?></td>
+	<td class="col_1"><?= $GLOBALS['TL_LANG']['default']['log_report_username'] ?>:</td>
+	<td class="col_2"><?= $this->username ?></td>
 </tr>
 <tr class="odd">
 	<td class="col_1">Log-Type:</td>
-	<td class="col_2 <?php echo $this->type;  ?>"><?php echo $this->type;  ?></td>
+	datarecord
+	<td class="col_2 <?= $this->type ?>"><?= $GLOBALS['TL_LANG']['default'][$this->type] ?></td>
 </tr>
 <tr class="">
 	<td class="col_1">Datum:</td>
-	<td class="col_2"><?php echo $this->date;  ?></td>
+	<td class="col_2"><?= $this->date ?></td>
 </tr>
 <tr class="odd">
 	<td class="col_1">Log-Mitteilung:</td>
-	<td class="col_2"><?php echo $this->logMessage;  ?></td>
+	<td class="col_2"><?= $this->logMessage ?></td>
 </tr>
 <?php if(is_array($arr_displayedFields[$this->table])): ?>
 <?php foreach ($arr_displayedFields[$this->table] as $fieldname): ?>
-	<?php $row++; $content = $this->fields[$fieldname];?>
-	<?php if ($content!=""): ?>
-		<tr class="<?php echo $row%2==0 ? "odd":""; ?>">
-		<td class="col_1"><?php echo $fieldname; ?>:</td>
-		<td class="col_2"><?php echo (is_array(unserialize($content)) ? print_r(unserialize($content),true) : $content);  ?></td>
+	<?php $row++; $content = $this->fields[$fieldname]; ?>
+	<?php if ($content!=''): ?>
+		<tr class="<?= $row%2==0 ? 'odd':'' ?>">
+		<td class="col_1"><?= $fieldname ?>:</td>
+		<td class="col_2"><?= (is_array(unserialize($content)) ? print_r(unserialize($content),true) : $content) ?></td>
 		</tr>
 	<?php endif; ?>
 <?php endforeach; ?>

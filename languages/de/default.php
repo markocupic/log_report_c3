@@ -17,6 +17,9 @@
  
 $GLOBALS['TL_LANG']['default']['log_report_modifications'] = "Änderungen an";
 $GLOBALS['TL_LANG']['default']['log_report_no_modifications_found'] = "Keine Änderungen gefunden!";
-$GLOBALS['TL_LANG']['default']['log_report_username'] = "Benutzername";
+$GLOBALS['TL_LANG']['default']['log_report_username'] = "Angemeldeter Benutzer";
 $GLOBALS['TL_LANG']['default']['linkToContaoBackendModule'] = "Link ins Contao Backend";
+$GLOBALS['TL_LANG']['default']['NEW_ENTRY'] = "Neuer Datenbankeintrag";
+$GLOBALS['TL_LANG']['default']['EDIT'] = "Ver&auml;nderter Datenbankeintrag";
+$GLOBALS['TL_LANG']['default']['DELETE'] = "Gel&ouml;schter Datenbankeintrag";
 ?>

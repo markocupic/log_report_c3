@@ -156,10 +156,12 @@ class LogReport extends \Frontend
                      {
                             if (false !== strpos($str, $table))
                             {
-
                                    $arr_patterns = array(
-                                          //A new version of record "tl_user.id=1" has been created
-                                          'edit' => '/(?P<table>\w+).id=(?P<id>\d+)/',
+                                          // A new entry "tl_content.id=895" has been created (parent records: tl_article.id=211, tl_page.id=145)
+                                          'new_entry' => '/A new entry \&quot\;(?P<table>\w+).id=(?P<id>\d+)\&quot\; has been created/',
+                                          // A new version of record "tl_business.id=223" has been created (parent records: tl_user.id=911)
+                                          'edit' => '/of record \&quot\;(?P<table>\w+).id=(?P<id>\d+)\&quot\; has been created/',
+                                          // DELETE FROM tl_content WHERE id=896
                                           'delete' => '/DELETE FROM (?P<table>\w+) WHERE id=(?P<id>\d+)/'
                                    );
 
@@ -205,7 +207,7 @@ class LogReport extends \Frontend
                                                         }
                                                  }
                                                  $template->username = $username;
-                                                 $template->date = $this->parseDate('l, d. F Y, H:i', $tstamp);
+                                                 $template->date = \Date::parse('l, d. F Y, H:i', $tstamp);
                                                  $template->fields = $fields;
                                                  //only the latest versions will be sent by the email
                                                  $GLOBALS['LOG_REPORT'][$table . "_html"][$table . "_" . $treffer["id"]] = $template->parse();

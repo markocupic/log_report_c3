@@ -59,6 +59,10 @@ tr.odd td
 {
 	width:75%;
 }
+.NEW_ENTRY
+{
+	color:#d58512;
+}
 
 .DELETE
 {
