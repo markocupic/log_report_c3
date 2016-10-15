@@ -41,13 +41,19 @@ class LogReport extends \Frontend
     public function runLogReport()
     {
 
-        //nur zu Testzwecken
+        // nur zu Testzwecken
         define('LOG_REPORT_TEST_MODE', false);
 
-        if (!$GLOBALS['TL_CONFIG']['log_report_activate'])
+        if (!isset($GLOBALS['TL_CONFIG']['log_report_activate']))
         {
             return;
         }
+
+        if ($GLOBALS['TL_CONFIG']['log_report_activate'] !== true)
+        {
+            return;
+        }
+
 
         if (trim($GLOBALS['TL_CONFIG']['log_report_recipients']) == '')
         {
@@ -60,7 +66,7 @@ class LogReport extends \Frontend
             return;
         }
 
-        //removes empty value with a callback function
+        // Remove empty value with a callback function
         $this->arrObservedTables = array_filter($arrObservedTables, array(
             "MCupic\LogReport",
             "isNotEmpty",
@@ -75,19 +81,19 @@ class LogReport extends \Frontend
         $template->arrObservedTables = $this->arrObservedTables;
         $template->loadLanguageFile('default');
         $this->dateKey = date("Y_m_d");
-        //if a report was allready sent today, abort here
+        // If a report was allready sent today, abort here
         $objReport = $this->Database->prepare("SELECT * FROM tl_log_report WHERE date=?")->execute($this->dateKey);
         if ($objReport->numRows == 0 || LOG_REPORT_TEST_MODE === true)
         {
-            //search for new Versions in the db
+            // Search for new Versions in the db
             $this->getNewVersions();
 
-            //add the partialHtml to the main-template
+            // Add the partialHtml to the main-template
             $template->report = $GLOBALS['LOG_REPORT'];
             unset($GLOBALS['LOG_REPORT']);
             $htmlMailContent = $template->parse();
 
-            //send email
+            // Send email
             if ($this->countReports < 1 && true == $GLOBALS['TL_CONFIG']['log_report_send_email_when_db_changed'])
             {
                 // When there are noch changes
@@ -99,15 +105,15 @@ class LogReport extends \Frontend
                 $this->sendEmail($htmlMailContent);
             }
 
-            //db insert
+            // db insert
             $set = array(
-                "date"       => $this->dateKey,
+                "date" => $this->dateKey,
                 "recipients" => $GLOBALS['TL_CONFIG']['log_report_recipients'],
-                "report"     => $htmlMailContent,
-                "token"      => $this->token,
+                "report" => $htmlMailContent,
+                "token" => $this->token,
             );
 
-            //store report in tl_log_report and in tl_log
+            // Store report in tl_log_report and in tl_log
             $objInsertStmt = $this->Database->prepare("INSERT INTO tl_log_report %s")->set($set)->execute();
             if ($objInsertStmt->affectedRows)
             {
@@ -131,12 +137,12 @@ class LogReport extends \Frontend
             return;
         }
 
-        //continue, if there are some unreported changes
+        // Continue, if there are some unreported changes
         while ($objLog->next())
         {
-            //create a html-table for each new row
+            // Create a html-table for each new row
             $this->createPartialHtml($objLog->text, $objLog->username, $objLog->tstamp);
-            //update column log_report_date in tl_log with the current date
+            // Update column log_report_date in tl_log with the current date
             $set = array(
                 "log_report_date" => $this->dateKey,
             );
@@ -166,45 +172,51 @@ class LogReport extends \Frontend
                         // A new entry "tl_content.id=895" has been created (parent records: tl_article.id=211, tl_page.id=145)
                         'new_entry' => '/A new entry \&quot\;(?P<table>\w+).id=(?P<id>\d+)\&quot\; has been created/',
                         // A new version of record "tl_business.id=223" has been created (parent records: tl_user.id=911)
-                        'edit'      => '/of record \&quot\;(?P<table>\w+).id=(?P<id>\d+)\&quot\; has been created/',
+                        'edit' => '/of record \&quot\;(?P<table>\w+).id=(?P<id>\d+)\&quot\; has been created/',
                         // DELETE FROM tl_content WHERE id=896
-                        'delete'    => '/DELETE FROM (?P<table>\w+) WHERE id=(?P<id>\d+)/',
+                        'delete' => '/DELETE FROM (?P<table>\w+) WHERE id=(?P<id>\d+)/',
                     );
 
                     foreach ($arr_patterns as $logType => $pattern)
                     {
-                        //ab php 5.2.2 named subpatterns
+                        // ab php 5.2.2 named subpatterns
                         preg_match($pattern, $str, $treffer);
-                        if (strlen($treffer["table"]) && strlen($treffer["id"]))
+                        $table = $treffer["table"];
+                        $id = $treffer["id"];
+                        if (strlen($table) && strlen($id))
                         {
                             $this->countReports++;
                             $template = new \FrontendTemplate($this->strPartialTemplate);
                             $template->table = $table;
                             $template->logMessage = $str;
                             $template->type = strtoupper($logType);
-                            $objDb = $this->Database->prepare(sprintf("SELECT * FROM %s WHERE id=?", $table))->execute($treffer["id"]);
+                            $objDb = $this->Database->prepare(sprintf("SELECT * FROM %s WHERE id=?", $table))->execute($id);
                             $arrFields = $this->Database->listFields($table);
                             $fields = array();
                             if ($objDb->numRows)
                             {
-                                //create the backend-link which links directly to the contao-backend
+                                // Create the backend-link which links directly to the contao-backend
                                 if ($table == "tl_content")
                                 {
-                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&table=%s&act=edit&id=%s", $this->token, "article", $table, $treffer["id"]);
+                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&table=%s&act=edit&id=%s", $this->token, "article", $table, $id);
                                 }
                                 elseif ($table == "tl_news")
                                 {
-                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&table=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $table, $treffer["id"]);
+                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&table=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $table, $id);
+                                }
+                                elseif ($table == "tl_calendar_events")
+                                {
+                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?do=%s&table=%s&id=%s&act=edit", 'calendar', 'tl_calendar_events', $id);
                                 }
                                 else
                                 {
-                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $treffer["id"]);
+                                    $backendUrl = $this->Environment->base . sprintf("contao/main.php?lrtoken=%s&do=%s&act=edit&id=%s", $this->token, str_replace("tl_", "", $table), $id);
                                 }
 
                                 $fields["backendUrl"] = '<a href="' . $backendUrl . '" title="go to contao backend">' . $GLOBALS['TL_LANG']['default']['linkToContaoBackendModule'] . '</a>';
                                 foreach ($arrFields as $arrField)
                                 {
-                                    //for security reasons the password will not be displayed
+                                    // For security reasons the password will not be displayed
                                     if ($arrField["name"] == "password" || $arrField["name"] == "PRIMARY")
                                     {
                                         continue;
@@ -215,8 +227,8 @@ class LogReport extends \Frontend
                             $template->username = $username;
                             $template->date = \Date::parse('l, d. F Y, H:i', $tstamp);
                             $template->fields = $fields;
-                            //only the latest versions will be sent by the email
-                            $GLOBALS['LOG_REPORT'][$table . "_html"][$table . "_" . $treffer["id"]] = $template->parse();
+                            // Only the latest versions will be sent by the email
+                            $GLOBALS['LOG_REPORT'][$table . "_html"][$table . "_" . $id] = $template->parse();
                         }
                     }
                 }
@@ -265,7 +277,7 @@ class LogReport extends \Frontend
         {
             return;
         }
-        //create the attachment-file
+        // Create the attachment-file
         $filepath = "system/html/log_report_" . time() . ".html";
         $file = new \File($filepath);
         $file->write($htmlMessage);
@@ -280,13 +292,13 @@ class LogReport extends \Frontend
             $email->subject = "change log contao";
             $email->text = 'A new log report was sent to you! Please open te email with a html-compatible email-programm!';
             $email->html = $htmlMessage;
-            $email->attachFile($filepath);
+            $email->attachFile(TL_ROOT . '/' . $filepath);
             if (strlen(trim($recipient)))
             {
                 $email->sendTo(trim($recipient));
             }
         }
-        //delete the tmp-file
+        // Delete the tmp-file
         $file->delete();
     }
 }
